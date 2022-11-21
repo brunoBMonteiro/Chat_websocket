@@ -1,15 +1,14 @@
 package org.example;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
 public class ChatClient {
     private static final String SERVER_ADDRESS = "127.0.0.1";
     private Scanner scanner;
-    private BufferedWriter out;
+    private PrintWriter out;
 
     public ChatClient() {
         scanner = new Scanner(System.in);
@@ -17,7 +16,7 @@ public class ChatClient {
 
     public void start() throws IOException {
         Socket clientSocket = new Socket(SERVER_ADDRESS, ChatServer.PORT);
-        this.out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
+        this.out = new PrintWriter(clientSocket.getOutputStream(), true);
         System.out.println("Cliente conectado ao servidor em " + SERVER_ADDRESS + ":" + ChatServer.PORT);
         messageLoop();
     }
@@ -27,9 +26,7 @@ public class ChatClient {
         do {
             System.out.println("Digite uma mensagem (ou sair para finalizar): ");
             entryMessage = scanner.nextLine();
-            out.write(entryMessage);
-            out.newLine();
-            out.flush();
+            out.println(entryMessage);
         } while (!entryMessage.equalsIgnoreCase("sair"));
     }
 
